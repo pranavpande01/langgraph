@@ -29,13 +29,24 @@ graph.add_edge("chat_node",END)
 
 chatbot=graph.compile(checkpointer=checkpointer)
 
-config = {
+
+def respond(user_input,thread_id):
+    config = {
     "configurable": {
-        "thread_id": 1
+        "thread_id": str(thread_id)
     }
-}
-def respond(user_input):
+    }
     return chatbot.invoke(
         {'messages':[HumanMessage(content=user_input)]},
         config=config
     )['messages'][-1].content
+
+def load_convo(thread_id):
+    config = {
+    "configurable": {
+        "thread_id": str(thread_id)
+    }
+    }
+    return chatbot.get_state(
+                config=config
+    ).values['messages']
